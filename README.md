@@ -1,0 +1,2 @@
+# deep_learning_estimator_labels
+深度学习在多目标ctr预估中的应用，使用tensorflow estimator进行封装，包括esmm、mmoe模型
