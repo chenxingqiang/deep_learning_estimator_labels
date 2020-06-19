@@ -39,7 +39,6 @@ def model_fn(labels, features, mode, params):
             dense_cvr = tf.layers.dense(inputs=dense_cvr, units=params.hidden_units[i], activation=tf.nn.relu)
         cvr_out = tf.layers.dense(inputs=dense_cvr, units=1)
 
-    # ctr_score = tf.identity(tf.nn.sigmoid(ctr_out), name='ctr_score')
     ctr_score = tf.identity(tf.nn.sigmoid(ctr_out), name='ctr_score')
     cvr_score = tf.identity(tf.nn.sigmoid(cvr_out), name='cvr_score')
     ctcvr_score = ctr_score * cvr_score
@@ -62,7 +61,8 @@ def model_fn(labels, features, mode, params):
             'ctr_auc': ctr_auc,
             'ctcvr_auc': ctcvr_auc
         }
-        ctr_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(labels=ctr_labels, logits=ctr_out))
+        # ctr_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(labels=ctr_labels, logits=ctr_out))
+        ctr_loss = tf.reduce_mean(tf.losses.log_loss(labels=ctr_labels, predictions=ctr_score))
         ctcvr_loss = tf.reduce_mean(tf.losses.log_loss(labels=ctcvr_labels, predictions=ctcvr_score))
         loss = ctr_loss + ctcvr_loss
 
