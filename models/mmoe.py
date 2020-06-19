@@ -127,9 +127,10 @@ def model_fn(labels, features, mode, params):
             'ctr_auc': ctr_auc,
             'ctcvr_auc': ctcvr_auc
         }
-        # ctr_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(labels=ctr_labels, logits=ctr_out))
         ctr_loss = tf.reduce_mean(tf.losses.log_loss(labels=ctr_labels, predictions=ctr_score))
         ctcvr_loss = tf.reduce_mean(tf.losses.log_loss(labels=ctcvr_labels, predictions=ctcvr_score))
+        # ctr_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(labels=ctr_labels, logits=ctr_out))
+        # ctcvr_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(labels=ctcvr_labels, logits=ctcvr_score))
         loss = ctr_loss + ctcvr_loss
 
         if mode == tf.estimator.ModeKeys.TRAIN:
