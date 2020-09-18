@@ -2,7 +2,7 @@
 # 一、项目介绍 
 深度学习在 多目标任务 的ctr预估等场景中的应用，使用tensorflow estimator进行封装，包括esmm、mmoe模型
 
-该项目针对多目标任务，这里给出单目标工程链接：https://github.com/R-Stalker/deep_learning_estimator
+该项目针对多目标任务，这里给出单目标工程链接：https://github.com/R-Stalker/RSDeepModel
 
 # 二、代码目录
 
