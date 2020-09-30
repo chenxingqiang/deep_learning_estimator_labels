@@ -109,8 +109,8 @@ def model_fn(labels, features, mode, params):
 
     ctr_score = tf.identity(tf.nn.sigmoid(ctr_out), name='ctr_score')
     cvr_score = tf.identity(tf.nn.sigmoid(cvr_out), name='cvr_score')
-    ctcvr_score = ctr_score * cvr_score
-    ctcvr_score = tf.identity(ctcvr_score, name='ctcvr_score')
+    # ctcvr_score = ctr_score * cvr_score
+    # ctcvr_score = tf.identity(ctcvr_score, name='ctcvr_score')
 
     score = tf.add(ctr_score * params.label1_weight, cvr_score * params.label2_weight)
     score = tf.identity(score, name='score')
@@ -122,15 +122,15 @@ def model_fn(labels, features, mode, params):
         ctr_labels = tf.identity(labels['label'], name='ctr_labels')
         ctcvr_labels = tf.identity(labels['label2'], name='ctcvr_labels')
         ctr_auc = tf.metrics.auc(labels=ctr_labels, predictions=ctr_score, name='auc')
-        ctcvr_auc = tf.metrics.auc(labels=ctcvr_labels, predictions=ctcvr_score, name='auc')
+        cvr_auc = tf.metrics.auc(labels=ctcvr_labels, predictions=cvr_score, name='auc')
         metrics = {
             'ctr_auc': ctr_auc,
-            'ctcvr_auc': ctcvr_auc
+            'cvr_auc': cvr_auc
         }
         # ctr_loss = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(labels=ctr_labels, logits=ctr_out))
         ctr_loss = tf.reduce_mean(tf.losses.log_loss(labels=ctr_labels, predictions=ctr_score))
-        ctcvr_loss = tf.reduce_mean(tf.losses.log_loss(labels=ctcvr_labels, predictions=ctcvr_score))
-        loss = ctr_loss + ctcvr_loss
+        cvr_loss = tf.reduce_mean(tf.losses.log_loss(labels=ctcvr_labels, predictions=cvr_score))
+        loss = ctr_loss + cvr_loss
 
         if mode == tf.estimator.ModeKeys.TRAIN:
             optimizer = tf.train.AdamOptimizer(params.learning_rate)
